@@ -1,18 +1,13 @@
 import Foundation
 import Capacitor
 
-/**
- * Please read the Capacitor iOS Plugin Development Guide
- * here: https://capacitorjs.com/docs/plugins/ios
- */
 @objc(SwiftUITestPlugin)
 public class SwiftUITestPlugin: CAPPlugin {
-    private let implementation = SwiftUITest()
-
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+    @objc func show(_ call: CAPPluginCall) {
+        // UIの更新処理はメインスレッドで行う必要アリ
+        DispatchQueue.main.async {
+            let testViewController = TestViewController(capacitorCall: call)
+            self.bridge?.viewController?.present(testViewController, animated: true)
+        }
     }
 }
